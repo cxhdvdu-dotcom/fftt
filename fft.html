@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSpark - منصة الطاقة المستدامة التفاعلية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --secondary: #3b82f6;
+            --secondary-dark: #2563eb;
+            --accent: #f59e0b;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --dark-light: #374151;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --white: #ffffff;
+            --bg: #f9fafb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Navigation with glassmorphism */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: rotate 4s linear infinite;
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        /* Enhanced nav links with better hover effects */
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+        }
+
+        .nav-link:hover {
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(229, 231, 235, 0.5);
+            z-index: 999;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 90px;
+            min-height: calc(100vh - 90px);
+        }
+
+        /* Enhanced section transitions with fade and slide */
+        .section {
+            display: none;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Enhanced Hero Section with gradient animation and parallax effect */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            color: var(--white);
+            border-radius: 2rem;
+            margin: 2rem;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-icon {
+            font-size: 6rem;
+            margin-bottom: 1.5rem;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced stat cards with glassmorphism */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Enhanced cards with better shadows and hover effects */
+        .card {
+            background: var(--white);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-slow);
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .card h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .card p {
+            color: var(--gray);
+            line-height: 1.8;
+            font-size: 1.0625rem;
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Energy Types Section */
+        .energy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Enhanced energy cards with better animations */
+        .energy-card {
+            background: var(--white);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-slow);
+            cursor: pointer;
+        }
+
+        .energy-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .energy-header {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .energy-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+
+        .energy-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        .energy-header > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .solar { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+        .wind { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+        .hydro { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .bio { background: linear-gradient(135deg, #10b981, #059669); }
+        .geo { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .energy-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: var(--transition);
+        }
+
+        .energy-card:hover .energy-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .energy-body {
+            padding: 2rem;
+        }
+
+        .energy-body h3 {
+            font-size: 1.375rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .energy-body p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .energy-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--gray-light);
+        }
+
+        .energy-stat {
+            text-align: center;
+        }
+
+        .energy-stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        .energy-stat-label {
+            font-size: 0.8125rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-progress-bar {
+            flex: 1;
+            height: 10px;
+            background: var(--gray-light);
+            border-radius: 1rem;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .question-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .question-text {
+            font-size: 1.625rem;
+            font-weight: 800;
+            margin-bottom: 2.5rem;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .answers-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        /* Enhanced answer buttons with better hover effects */
+        .answer-btn {
+            background: var(--white);
+            border: 3px solid var(--gray-light);
+            padding: 1.75rem;
+            border-radius: 1.25rem;
+            font-size: 1.1875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: right;
+            color: var(--dark);
+            font-family: 'Cairo', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .answer-btn:hover::before {
+            opacity: 1;
+        }
+
+        .answer-btn:hover {
+            border-color: var(--primary);
+            transform: translateX(-8px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .answer-btn.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .answer-btn.correct {
+            border-color: var(--success);
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            color: var(--white);
+            animation: pulse 0.5s ease;
+        }
+
+        .answer-btn.incorrect {
+            border-color: var(--danger);
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: var(--white);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .answer-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Enhanced buttons with gradient and better shadows */
+        .btn {
+            padding: 1.25rem 2.5rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1875rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .quiz-result {
+            background: var(--white);
+            padding: 4rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .result-icon {
+            font-size: 6rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 1s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .result-score {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .result-message {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg);
+            border-radius: 1.5rem;
+        }
+
+        .result-detail {
+            text-align: center;
+        }
+
+        .result-detail-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-detail-label {
+            color: var(--gray);
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        /* Calculator Section */
+        .calculator-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .calculator-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-size: 1.1875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1.25rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 1rem;
+            font-size: 1.0625rem;
+            font-family: 'Cairo', sans-serif;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 1.25rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 1rem;
+            font-size: 1.0625rem;
+            font-family: 'Cairo', sans-serif;
+            transition: var(--transition);
+            background: var(--white);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .slider-container {
+            margin-top: 1rem;
+        }
+
+        .slider {
+            width: 100%;
+            height: 10px;
+            border-radius: 1rem;
+            background: var(--gray-light);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.1);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            margin-top: 0.75rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .calculator-result {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, #8b5cf6 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            color: var(--white);
+            padding: 4rem;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-label {
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        .result-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .breakdown-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+        }
+
+        .breakdown-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .breakdown-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .breakdown-label {
+            font-size: 1.0625rem;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        .recommendations {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+
+        .recommendations h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: start;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border-right: 4px solid var(--primary);
+            transition: var(--transition);
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-icon {
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .recommendation-text {
+            color: var(--dark);
+            line-height: 1.8;
+            font-weight: 600;
+        }
+
+        /* Achievements Section */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .achievement-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: var(--transition-slow);
+            border: 3px solid transparent;
+        }
+
+        .achievement-card.unlocked {
+            border-color: var(--primary);
+            animation: unlockPulse 0.6s ease;
+        }
+
+        @keyframes unlockPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .achievement-card.unlocked:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .achievement-card.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+
+        .achievement-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .achievement-card.unlocked:hover .achievement-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .achievement-title {
+            font-size: 1.375rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .achievement-desc {
+            color: var(--gray);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .achievement-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8125rem;
+            font-weight: 800;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Added floating next page button */
+        .next-page-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 1.25rem 2rem;
+            border-radius: 3rem;
+            font-size: 1.125rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transition: var(--transition);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Cairo', sans-serif;
+            animation: floatButton 3s ease-in-out infinite;
+        }
+
+        @keyframes floatButton {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .next-page-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+        }
+
+        .next-page-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border-radius: 3rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .next-page-btn:hover::before {
+            opacity: 1;
+        }
+
+        .next-page-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark), var(--dark-light));
+            color: var(--white);
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Added scroll reveal animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero p {
+                font-size: 1.125rem;
+            }
+
+            .hero-icon {
+                font-size: 4rem;
+            }
+
+            .cards-grid,
+            .energy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-actions {
+                flex-direction: column;
+            }
+
+            .next-page-btn {
+                bottom: 1rem;
+                left: 1rem;
+                right: 1rem;
+                justify-content: center;
+            }
+        }
+
+        /* Added loading animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .loading {
+            animation: shimmer 2s infinite;
+            background: linear-gradient(to right, #f0f0f0 4%, #e0e0e0 25%, #f0f0f0 36%);
+            background-size: 1000px 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span>EcoSpark</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a class="nav-link active" data-section="home">الرئيسية</a></li>
+                <li><a class="nav-link" data-section="energy">أنواع الطاقة</a></li>
+                <li><a class="nav-link" data-section="quiz">الاختبار</a></li>
+                <li><a class="nav-link" data-section="calculator">الحاسبة</a></li>
+                <li><a class="nav-link" data-section="achievements">الإنجازات</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Added floating next page button -->
+    <button class="next-page-btn" onclick="goToNextPage()">
+        <span>الصفحة التالية</span>
+        <span>←</span>
+    </button>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-icon">🌍</div>
+                <h1>مرحباً بك في EcoSpark</h1>
+                <p>منصتك التفاعلية لاستكشاف عالم الطاقة المستدامة</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalLearners">1,234</span>
+                        <span class="stat-label">متعلم نشط</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">أنواع طاقة</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="quizzesTaken">567</span>
+                        <span class="stat-label">اختبار مكتمل</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">89%</span>
+                        <span class="stat-label">معدل النجاح</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="cards-grid">
+                    <div class="card scroll-reveal" onclick="navigateToSection('energy')">
+                        <span class="card-icon">🔋</span>
+                        <h3>استكشف أنواع الطاقة</h3>
+                        <p>تعرف على مصادر الطاقة المتجددة المختلفة وكيفية عملها وفوائدها للبيئة</p>
+                        <span class="card-badge">5 أنواع</span>
+                    </div>
+                    
+                    <div class="card scroll-reveal" onclick="navigateToSection('quiz')">
+                        <span class="card-icon">🎯</span>
+                        <h3>اختبر معلوماتك</h3>
+                        <p>تحدى نفسك مع أسئلة تفاعلية واكتشف مستوى معرفتك بالطاقة المستدامة</p>
+                        <span class="card-badge">10 أسئلة</span>
+                    </div>
+                    
+                    <div class="card scroll-reveal" onclick="navigateToSection('calculator')">
+                        <span class="card-icon">📊</span>
+                        <h3>احسب بصمتك الكربونية</h3>
+                        <p>اكتشف تأثيرك على البيئة واحصل على نصائح لتقليل استهلاك الطاقة</p>
+                        <span class="card-badge">تحليل شامل</span>
+                    </div>
+                    
+                    <div class="card scroll-reveal" onclick="navigateToSection('achievements')">
+                        <span class="card-icon">🏆</span>
+                        <h3>اجمع الإنجازات</h3>
+                        <p>احصل على شارات وإنجازات مع تقدمك في رحلة التعلم</p>
+                        <span class="card-badge" id="achievementCount">0/8</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Energy Types Section -->
+        <section id="energy" class="section">
+            <div class="container">
+                <h2 style="font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 3rem; color: var(--dark);">
+                    أنواع الطاقة المتجددة
+                </h2>
+                
+                <div class="energy-grid">
+                    <div class="energy-card scroll-reveal">
+                        <div class="energy-header solar">
+                            <div class="energy-icon">☀️</div>
+                            <h3 style="font-size: 2rem; font-weight: 900;">الطاقة الشمسية</h3>
+                        </div>
+                        <div class="energy-body">
+                            <h3>كيف تعمل؟</h3>
+                            <p>تحول الألواح الشمسية ضوء الشمس مباشرة إلى كهرباء باستخدام الخلايا الكهروضوئية. عندما تسقط أشعة الشمس على هذه الخلايا، تثير الإلكترونات وتولد تياراً كهربائياً.</p>
+                            <div class="energy-stats">
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">173,000</span>
+                                    <span class="energy-stat-label">تيراواط متاح</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">25</span>
+                                    <span class="energy-stat-label">سنة عمر افتراضي</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">20%</span>
+                                    <span class="energy-stat-label">كفاءة متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="energy-card scroll-reveal">
+                        <div class="energy-header wind">
+                            <div class="energy-icon">💨</div>
+                            <h3 style="font-size: 2rem; font-weight: 900;">طاقة الرياح</h3>
+                        </div>
+                        <div class="energy-body">
+                            <h3>كيف تعمل؟</h3>
+                            <p>تستخدم التوربينات الهوائية طاقة الرياح الحركية لتدوير شفرات كبيرة متصلة بمولد كهربائي. كلما زادت سرعة الرياح، زادت الطاقة المولدة.</p>
+                            <div class="energy-stats">
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">1,200</span>
+                                    <span class="energy-stat-label">جيجاواط عالمياً</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">20</span>
+                                    <span class="energy-stat-label">سنة عمر افتراضي</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">45%</span>
+                                    <span class="energy-stat-label">كفاءة متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="energy-card scroll-reveal">
+                        <div class="energy-header hydro">
+                            <div class="energy-icon">💧</div>
+                            <h3 style="font-size: 2rem; font-weight: 900;">الطاقة المائية</h3>
+                        </div>
+                        <div class="energy-body">
+                            <h3>كيف تعمل؟</h3>
+                            <p>تستخدم قوة المياه المتدفقة أو الساقطة لتدوير توربينات متصلة بمولدات كهربائية. السدود تخزن المياه وتطلقها بشكل منظم لتوليد الكهرباء.</p>
+                            <div class="energy-stats">
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">1,330</span>
+                                    <span class="energy-stat-label">جيجاواط عالمياً</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">50+</span>
+                                    <span class="energy-stat-label">سنة عمر افتراضي</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">90%</span>
+                                    <span class="energy-stat-label">كفاءة متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="energy-card scroll-reveal">
+                        <div class="energy-header bio">
+                            <div class="energy-icon">🌱</div>
+                            <h3 style="font-size: 2rem; font-weight: 900;">الطاقة الحيوية</h3>
+                        </div>
+                        <div class="energy-body">
+                            <h3>كيف تعمل؟</h3>
+                            <p>تستخدم المواد العضوية مثل النباتات والنفايات لإنتاج الطاقة. يمكن حرقها مباشرة أو تحويلها إلى وقود حيوي مثل الإيثانول والديزل الحيوي.</p>
+                            <div class="energy-stats">
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">130</span>
+                                    <span class="energy-stat-label">جيجاواط عالمياً</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">15</span>
+                                    <span class="energy-stat-label">سنة عمر افتراضي</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">35%</span>
+                                    <span class="energy-stat-label">كفاءة متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="energy-card scroll-reveal">
+                        <div class="energy-header geo">
+                            <div class="energy-icon">🌋</div>
+                            <h3 style="font-size: 2rem; font-weight: 900;">الطاقة الحرارية الأرضية</h3>
+                        </div>
+                        <div class="energy-body">
+                            <h3>كيف تعمل؟</h3>
+                            <p>تستغل الحرارة الطبيعية من باطن الأرض. يتم ضخ الماء إلى أعماق الأرض حيث يسخن، ثم يعود كبخار لتدوير التوربينات وتوليد الكهرباء.</p>
+                            <div class="energy-stats">
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">15</span>
+                                    <span class="energy-stat-label">جيجاواط عالمياً</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">30</span>
+                                    <span class="energy-stat-label">سنة عمر افتراضي</span>
+                                </div>
+                                <div class="energy-stat">
+                                    <span class="energy-stat-value">15%</span>
+                                    <span class="energy-stat-label">كفاءة متوسطة</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section">
+            <div class="container">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 1rem; color: var(--dark);">
+                            اختبار الطاقة المستدامة
+                        </h2>
+                        <p style="color: var(--gray); font-size: 1.25rem;">اختبر معلوماتك حول الطاقة المتجددة والاستدامة</p>
+                        
+                        <div class="quiz-progress">
+                            <span style="font-weight: 800; color: var(--dark);">السؤال <span id="currentQuestion">1</span> من <span id="totalQuestions">10</span></span>
+                            <div class="quiz-progress-bar">
+                                <div class="quiz-progress-fill" id="quizProgressFill"></div>
+                            </div>
+                            <span style="font-weight: 800; color: var(--primary);">النقاط: <span id="currentScore">0</span></span>
+                        </div>
+                    </div>
+
+                    <div id="quizContent"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator Section -->
+        <section id="calculator" class="section">
+            <div class="container">
+                <div class="calculator-container">
+                    <h2 style="font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 1rem; color: var(--dark);">
+                        حاسبة البصمة الكربونية
+                    </h2>
+                    <p style="text-align: center; color: var(--gray); font-size: 1.25rem; margin-bottom: 3rem;">
+                        احسب تأثيرك على البيئة واحصل على نصائح مخصصة
+                    </p>
+
+                    <div class="calculator-card">
+                        <form id="calculatorForm">
+                            <div class="form-group">
+                                <label class="form-label">استهلاك الكهرباء الشهري (كيلوواط/ساعة)</label>
+                                <input type="number" id="electricity" class="form-input" value="500" min="0" required>
+                                <div class="slider-container">
+                                    <input type="range" id="electricitySlider" class="slider" min="0" max="2000" value="500">
+                                    <span class="slider-value"><span id="electricityValue">500</span> كيلوواط/ساعة</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">استهلاك الغاز الشهري (متر مكعب)</label>
+                                <input type="number" id="gas" class="form-input" value="50" min="0" required>
+                                <div class="slider-container">
+                                    <input type="range" id="gasSlider" class="slider" min="0" max="200" value="50">
+                                    <span class="slider-value"><span id="gasValue">50</span> متر مكعب</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">المسافة المقطوعة بالسيارة شهرياً (كيلومتر)</label>
+                                <input type="number" id="car" class="form-input" value="1000" min="0" required>
+                                <div class="slider-container">
+                                    <input type="range" id="carSlider" class="slider" min="0" max="5000" value="1000">
+                                    <span class="slider-value"><span id="carValue">1000</span> كيلومتر</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">عدد الرحلات الجوية سنوياً</label>
+                                <input type="number" id="flights" class="form-input" value="2" min="0" required>
+                                <div class="slider-container">
+                                    <input type="range" id="flightsSlider" class="slider" min="0" max="20" value="2">
+                                    <span class="slider-value"><span id="flightsValue">2</span> رحلة</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">نوع النظام الغذائي</label>
+                                <select id="diet" class="form-select" required>
+                                    <option value="meat">يحتوي على لحوم بكثرة</option>
+                                    <option value="balanced" selected>متوازن</option>
+                                    <option value="vegetarian">نباتي</option>
+                                    <option value="vegan">نباتي صرف</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">إعادة التدوير</label>
+                                <select id="recycling" class="form-select" required>
+                                    <option value="never">نادراً</option>
+                                    <option value="sometimes" selected>أحياناً</option>
+                                    <option value="often">غالباً</option>
+                                    <option value="always">دائماً</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.375rem; padding: 1.5rem;">
+                                احسب البصمة الكربونية 🌍
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="calculatorResult" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section id="achievements" class="section">
+            <div class="container">
+                <h2 style="font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 1rem; color: var(--dark);">
+                    إنجازاتك
+                </h2>
+                <p style="text-align: center; color: var(--gray); font-size: 1.25rem; margin-bottom: 3rem;">
+                    اجمع الشارات مع تقدمك في رحلة التعلم
+                </p>
+
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚡</div>
+            <h3 style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">EcoSpark</h3>
+            <p style="margin-bottom: 2rem; opacity: 0.9; font-size: 1.125rem;">منصتك التفاعلية لاستكشاف عالم الطاقة المستدامة</p>
+            
+            <div class="footer-links">
+                <a href="#" class="footer-link">عن المشروع</a>
+                <a href="#" class="footer-link">الأسئلة الشائعة</a>
+                <a href="#" class="footer-link">اتصل بنا</a>
+                <a href="#" class="footer-link">سياسة الخصوصية</a>
+            </div>
+            
+            <p style="opacity: 0.7; font-size: 0.9375rem;">© 2025 EcoSpark. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        // Global State
+        const state = {
+            currentSection: 'home',
+            quizData: {
+                currentQuestion: 0,
+                score: 0,
+                answers: [],
+                questions: [
+                    {
+                        question: "ما هي أكثر مصادر الطاقة المتجددة استخداماً في العالم؟",
+                        options: ["الطاقة الشمسية", "طاقة الرياح", "الطاقة المائية", "الطاقة الحيوية"],
+                        correct: 2,
+                        explanation: "الطاقة المائية هي أكثر مصادر الطاقة المتجددة استخداماً عالمياً بقدرة إنتاجية تتجاوز 1,330 جيجاواط."
+                    },
+                    {
+                        question: "كم تبلغ الكفاءة المتوسطة للألواح الشمسية الحديثة؟",
+                        options: ["10%", "20%", "40%", "60%"],
+                        correct: 1,
+                        explanation: "الألواح الشمسية الحديثة تحقق كفاءة متوسطة حوالي 20%، مع وصول بعض الأنواع المتقدمة إلى 25%."
+                    },
+                    {
+                        question: "ما هو العمر الافتراضي المتوقع لتوربينات الرياح؟",
+                        options: ["10 سنوات", "20 سنة", "30 سنة", "50 سنة"],
+                        correct: 1,
+                        explanation: "العمر الافتراضي لتوربينات الرياح يتراوح بين 20-25 سنة مع الصيانة المناسبة."
+                    },
+                    {
+                        question: "أي من مصادر الطاقة التالية يعتبر الأكثر كفاءة؟",
+                        options: ["الطاقة الشمسية", "طاقة الرياح", "الطاقة المائية", "الطاقة الحرارية الأرضية"],
+                        correct: 2,
+                        explanation: "الطاقة المائية تحقق أعلى كفاءة بنسبة تصل إلى 90%، مما يجعلها الأكثر كفاءة بين مصادر الطاقة المتجددة."
+                    },
+                    {
+                        question: "ما هي الطاقة الحيوية؟",
+                        options: [
+                            "الطاقة من الشمس",
+                            "الطاقة من المواد العضوية",
+                            "الطاقة من باطن الأرض",
+                            "الطاقة من الرياح"
+                        ],
+                        correct: 1,
+                        explanation: "الطاقة الحيوية تُنتج من المواد العضوية مثل النباتات والنفايات الحيوية."
+                    },
+                    {
+                        question: "كم تبلغ القدرة الإنتاجية العالمية لطاقة الرياح تقريباً؟",
+                        options: ["120 جيجاواط", "600 جيجاواط", "1,200 جيجاواط", "2,400 جيجاواط"],
+                        correct: 2,
+                        explanation: "القدرة الإنتاجية العالمية لطاقة الرياح تتجاوز 1,200 جيجاواط وتستمر في النمو."
+                    },
+                    {
+                        question: "ما هي الميزة الرئيسية للطاقة الحرارية الأرضية؟",
+                        options: [
+                            "رخيصة جداً",
+                            "متوفرة في كل مكان",
+                            "تعمل على مدار الساعة",
+                            "لا تحتاج صيانة"
+                        ],
+                        correct: 2,
+                        explanation: "الطاقة الحرارية الأرضية تعمل بشكل مستمر على مدار الساعة، على عكس الطاقة الشمسية والرياح."
+                    },
+                    {
+                        question: "ما هو أكبر تحدي يواجه الطاقة الشمسية؟",
+                        options: [
+                            "التكلفة العالية",
+                            "الاعتماد على الطقس",
+                            "صعوبة التركيب",
+                            "قصر العمر الافتراضي"
+                        ],
+                        correct: 1,
+                        explanation: "الاعتماد على الطقس وتوفر أشعة الشمس هو التحدي الأكبر، حيث لا تعمل الألواح بكفاءة في الأيام الغائمة أو الليل."
+                    },
+                    {
+                        question: "كم طن من CO2 يمكن توفيره سنوياً باستخدام الطاقة المتجددة لمنزل متوسط؟",
+                        options: ["1 طن", "3 أطنان", "6 أطنان", "10 أطنان"],
+                        correct: 2,
+                        explanation: "يمكن توفير حوالي 6 أطنان من انبعاثات CO2 سنوياً عند التحول للطاقة المتجددة في منزل متوسط."
+                    },
+                    {
+                        question: "ما هي أسرع مصادر الطاقة المتجددة نمواً حالياً؟",
+                        options: ["الطاقة المائية", "الطاقة الشمسية", "طاقة الرياح", "الطاقة الحيوية"],
+                        correct: 1,
+                        explanation: "الطاقة الشمسية تشهد أسرع نمو بفضل انخفاض التكاليف والتطور التكنولوجي المستمر."
+                    }
+                ]
+            },
+            achievements: [
+                { id: 'first_visit', name: 'الزائر الأول', desc: 'قم بزيارة المنصة لأول مرة', icon: '👋', unlocked: true },
+                { id: 'energy_explorer', name: 'مستكشف الطاقة', desc: 'اطلع على جميع أنواع الطاقة', icon: '🔍', unlocked: false },
+                { id: 'quiz_starter', name: 'بداية الاختبار', desc: 'ابدأ أول اختبار', icon: '🎯', unlocked: false },
+                { id: 'quiz_master', name: 'خبير الاختبارات', desc: 'احصل على 80% أو أكثر', icon: '🏆', unlocked: false },
+                { id: 'perfect_score', name: 'النتيجة الكاملة', desc: 'احصل على 100% في الاختبار', icon: '⭐', unlocked: false },
+                { id: 'calculator_user', name: 'محلل البصمة', desc: 'استخدم حاسبة البصمة الكربونية', icon: '📊', unlocked: false },
+                { id: 'eco_warrior', name: 'محارب البيئة', desc: 'بصمة كربونية أقل من 5 أطنان', icon: '🌱', unlocked: false },
+                { id: 'complete_journey', name: 'الرحلة الكاملة', desc: 'استكشف جميع أقسام المنصة', icon: '🎓', unlocked: false }
+            ],
+            visitedSections: new Set(['home'])
+        };
+
+        // Navigation
+        function navigateToSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show target section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.section === sectionId) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Track visited sections
+            state.visitedSections.add(sectionId);
+            checkAchievements();
+
+            // Update state
+            state.currentSection = sectionId;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Initialize section if needed
+            if (sectionId === 'quiz' && !document.getElementById('quizContent').innerHTML) {
+                initQuiz();
+            }
+            if (sectionId === 'achievements' && !document.getElementById('achievementsGrid').innerHTML) {
+                renderAchievements();
+            }
+
+            setTimeout(() => {
+                revealElements();
+            }, 100);
+        }
+
+        function goToNextPage() {
+            const sections = ['home', 'energy', 'quiz', 'calculator', 'achievements'];
+            const currentIndex = sections.indexOf(state.currentSection);
+            const nextIndex = (currentIndex + 1) % sections.length;
+            navigateToSection(sections[nextIndex]);
+        }
+
+        // Event listeners for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateToSection(link.dataset.section);
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function revealElements() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach((element, index) => {
+                setTimeout(() => {
+                    element.classList.add('revealed');
+                }, index * 100);
+            });
+        }
+
+        // Quiz Functions
+        function initQuiz() {
+            state.quizData.currentQuestion = 0;
+            state.quizData.score = 0;
+            state.quizData.answers = [];
+            unlockAchievement('quiz_starter');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const quiz = state.quizData;
+            const question = quiz.questions[quiz.currentQuestion];
+            const totalQuestions = quiz.questions.length;
+
+            // Update progress
+            document.getElementById('currentQuestion').textContent = quiz.currentQuestion + 1;
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            document.getElementById('currentScore').textContent = quiz.score;
+            document.getElementById('quizProgressFill').style.width = 
+                ((quiz.currentQuestion / totalQuestions) * 100) + '%';
+
+            // Render question
+            const content = `
+                <div class="question-card">
+                    <span class="question-number">السؤال ${quiz.currentQuestion + 1}</span>
+                    <h3 class="question-text">${question.question}</h3>
+                    <div class="answers-grid">
+                        ${question.options.map((option, index) => `
+                            <button class="answer-btn" data-index="${index}">
+                                ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-secondary" onclick="previousQuestion()" 
+                            ${quiz.currentQuestion === 0 ? 'disabled' : ''}>
+                            السابق
+                        </button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>
+                            ${quiz.currentQuestion === totalQuestions - 1 ? 'إنهاء الاختبار' : 'التالي'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('quizContent').innerHTML = content;
+
+            // Add answer button listeners
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.addEventListener('click', selectAnswer);
+            });
+        }
+
+        function selectAnswer(e) {
+            const selectedIndex = parseInt(e.target.dataset.index);
+            const question = state.quizData.questions[state.quizData.currentQuestion];
+
+            // Remove previous selections
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+                btn.disabled = true;
+            });
+
+            // Mark selected answer
+            e.target.classList.add('selected');
+
+            // Check if correct
+            const isCorrect = selectedIndex === question.correct;
+            if (isCorrect) {
+                e.target.classList.add('correct');
+                state.quizData.score += 10;
+                document.getElementById('currentScore').textContent = state.quizData.score;
+            } else {
+                e.target.classList.add('incorrect');
+                // Show correct answer
+                document.querySelectorAll('.answer-btn')[question.correct].classList.add('correct');
+            }
+
+            // Store answer
+            state.quizData.answers[state.quizData.currentQuestion] = {
+                selected: selectedIndex,
+                correct: question.correct,
+                isCorrect: isCorrect
+            };
+
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+
+            // Show explanation after a delay
+            setTimeout(() => {
+                const explanationDiv = document.createElement('div');
+                explanationDiv.style.cssText = `
+                    margin-top: 1.5rem;
+                    padding: 1.5rem;
+                    background: ${isCorrect ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'};
+                    border-right: 4px solid ${isCorrect ? 'var(--success)' : 'var(--danger)'};
+                    border-radius: 1rem;
+                    animation: fadeInUp 0.5s ease;
+                `;
+                explanationDiv.innerHTML = `
+                    <strong style="color: var(--dark); display: block; margin-bottom: 0.5rem; font-size: 1.125rem;">
+                        ${isCorrect ? '✓ إجابة صحيحة!' : '✗ إجابة خاطئة'}
+                    </strong>
+                    <p style="color: var(--gray); line-height: 1.8; font-size: 1.0625rem;">${question.explanation}</p>
+                `;
+                document.querySelector('.question-card').appendChild(explanationDiv);
+            }, 500);
+        }
+
+        function nextQuestion() {
+            const quiz = state.quizData;
+            
+            if (quiz.currentQuestion < quiz.questions.length - 1) {
+                quiz.currentQuestion++;
+                renderQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function previousQuestion() {
+            const quiz = state.quizData;
+            
+            if (quiz.currentQuestion > 0) {
+                quiz.currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function showQuizResult() {
+            const quiz = state.quizData;
+            const totalQuestions = quiz.questions.length;
+            const correctAnswers = quiz.answers.filter(a => a.isCorrect).length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+            // Check achievements
+            if (percentage >= 80) unlockAchievement('quiz_master');
+            if (percentage === 100) unlockAchievement('perfect_score');
+
+            // Determine message and icon
+            let message, icon;
+            if (percentage >= 90) {
+                message = 'ممتاز! أنت خبير في الطاقة المستدامة!';
+                icon = '🏆';
+            } else if (percentage >= 70) {
+                message = 'جيد جداً! لديك معرفة قوية بالطاقة المتجددة';
+                icon = '⭐';
+            } else if (percentage >= 50) {
+                message = 'جيد! استمر في التعلم لتحسين معرفتك';
+                icon = '👍';
+            } else {
+                message = 'حاول مرة أخرى! راجع المحتوى وأعد الاختبار';
+                icon = '📚';
+            }
+
+            const content = `
+                <div class="quiz-result">
+                    <div class="result-icon">${icon}</div>
+                    <div class="result-score">${percentage}%</div>
+                    <div class="result-message">${message}</div>
+                    
+                    <div class="result-details">
+                        <div class="result-detail">
+                            <span class="result-detail-value" style="color: var(--success);">${correctAnswers}</span>
+                            <span class="result-detail-label">إجابات صحيحة</span>
+                        </div>
+                        <div class="result-detail">
+                            <span class="result-detail-value" style="color: var(--danger);">${totalQuestions - correctAnswers}</span>
+                            <span class="result-detail-label">إجابات خاطئة</span>
+                        </div>
+                        <div class="result-detail">
+                            <span class="result-detail-value" style="color: var(--primary);">${quiz.score}</span>
+                            <span class="result-detail-label">إجمالي النقاط</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="initQuiz()">
+                            إعادة الاختبار 🔄
+                        </button>
+                        <button class="btn btn-secondary" onclick="navigateToSection('home')">
+                            العودة للرئيسية 🏠
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('quizContent').innerHTML = content;
+            document.getElementById('quizProgressFill').style.width = '100%';
+
+            // Update stats
+            const quizzesTaken = parseInt(localStorage.getItem('quizzesTaken') || '567');
+            localStorage.setItem('quizzesTaken', quizzesTaken + 1);
+            document.getElementById('quizzesTaken').textContent = quizzesTaken + 1;
+        }
+
+        // Calculator Functions
+        function setupCalculator() {
+            const form = document.getElementById('calculatorForm');
+            
+            // Sync sliders with inputs
+            const syncSlider = (inputId, sliderId, valueId) => {
+                const input = document.getElementById(inputId);
+                const slider = document.getElementById(sliderId);
+                const value = document.getElementById(valueId);
+
+                slider.addEventListener('input', () => {
+                    input.value = slider.value;
+                    value.textContent = slider.value;
+                });
+
+                input.addEventListener('input', () => {
+                    slider.value = input.value;
+                    value.textContent = input.value;
+                });
+            };
+
+            syncSlider('electricity', 'electricitySlider', 'electricityValue');
+            syncSlider('gas', 'gasSlider', 'gasValue');
+            syncSlider('car', 'carSlider', 'carValue');
+            syncSlider('flights', 'flightsSlider', 'flightsValue');
+
+            // Form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                calculateFootprint();
+            });
+        }
+
+        function calculateFootprint() {
+            // Get values
+            const electricity = parseFloat(document.getElementById('electricity').value);
+            const gas = parseFloat(document.getElementById('gas').value);
+            const car = parseFloat(document.getElementById('car').value);
+            const flights = parseFloat(document.getElementById('flights').value);
+            const diet = document.getElementById('diet').value;
+            const recycling = document.getElementById('recycling').value;
+
+            // Calculate emissions (simplified formula)
+            const electricityEmissions = electricity * 0.5; // kg CO2 per kWh
+            const gasEmissions = gas * 2.0; // kg CO2 per m³
+            const carEmissions = car * 0.2; // kg CO2 per km
+            const flightEmissions = flights * 1000; // kg CO2 per flight
+
+            // Diet emissions (kg CO2 per month)
+            const dietEmissions = {
+                'meat': 300,
+                'balanced': 200,
+                'vegetarian': 150,
+                'vegan': 100
+            }[diet];
+
+            // Recycling reduction (%)
+            const recyclingReduction = {
+                'never': 0,
+                'sometimes': 0.05,
+                'often': 0.10,
+                'always': 0.15
+            }[recycling];
+
+            // Total monthly emissions
+            const monthlyEmissions = (electricityEmissions + gasEmissions + carEmissions + dietEmissions) * (1 - recyclingReduction);
+            const yearlyEmissions = (monthlyEmissions * 12 + flightEmissions) / 1000; // Convert to tons
+
+            // Check achievement
+            unlockAchievement('calculator_user');
+            if (yearlyEmissions < 5) {
+                unlockAchievement('eco_warrior');
+            }
+
+            // Generate recommendations
+            const recommendations = [];
+            if (electricityEmissions > 200) {
+                recommendations.push({
+                    icon: '💡',
+                    text: 'استخدم مصابيح LED وافصل الأجهزة غير المستخدمة لتوفير الكهرباء'
+                });
+            }
+            if (carEmissions > 150) {
+                recommendations.push({
+                    icon: '🚲',
+                    text: 'استخدم وسائل النقل العام أو الدراجة للمسافات القصيرة'
+                });
+            }
+            if (flights > 4) {
+                recommendations.push({
+                    icon: '✈️',
+                    text: 'قلل من السفر الجوي أو اختر رحلات مباشرة لتقليل الانبعاثات'
+                });
+            }
+            if (diet === 'meat') {
+                recommendations.push({
+                    icon: '🥗',
+                    text: 'قلل من استهلاك اللحوم وأضف المزيد من الخضروات لنظامك الغذائي'
+                });
+            }
+            if (recycling === 'never' || recycling === 'sometimes') {
+                recommendations.push({
+                    icon: '♻️',
+                    text: 'ابدأ بإعادة تدوير البلاستيك والورق والزجاج بشكل منتظم'
+                });
+            }
+
+            // Determine rating
+            let rating, ratingColor, ratingIcon;
+            if (yearlyEmissions < 4) {
+                rating = 'ممتاز';
+                ratingColor = 'var(--success)';
+                ratingIcon = '🌟';
+            } else if (yearlyEmissions < 8) {
+                rating = 'جيد';
+                ratingColor = 'var(--primary)';
+                ratingIcon = '👍';
+            } else if (yearlyEmissions < 12) {
+                rating = 'متوسط';
+                ratingColor = 'var(--warning)';
+                ratingIcon = '⚠️';
+            } else {
+                rating = 'يحتاج تحسين';
+                ratingColor = 'var(--danger)';
+                ratingIcon = '📈';
+            }
+
+            // Display result
+            const resultHTML = `
+                <div class="calculator-result">
+                    <div class="result-icon">${ratingIcon}</div>
+                    <div class="result-value">${yearlyEmissions.toFixed(1)}</div>
+                    <div class="result-label">طن من CO2 سنوياً</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; margin-top: 1rem;">
+                        التقييم: <span style="color: ${ratingColor};">${rating}</span>
+                    </div>
+
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-value">${(electricityEmissions * 12 / 1000).toFixed(1)}</span>
+                            <span class="breakdown-label">طن من الكهرباء</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-value">${(gasEmissions * 12 / 1000).toFixed(1)}</span>
+                            <span class="breakdown-label">طن من الغاز</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-value">${(carEmissions * 12 / 1000).toFixed(1)}</span>
+                            <span class="breakdown-label">طن من السيارة</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-value">${(flightEmissions / 1000).toFixed(1)}</span>
+                            <span class="breakdown-label">طن من الطيران</span>
+                        </div>
+                    </div>
+                </div>
+
+                ${recommendations.length > 0 ? `
+                    <div class="recommendations">
+                        <h3>توصيات لتقليل بصمتك الكربونية</h3>
+                        ${recommendations.map(rec => `
+                            <div class="recommendation-item">
+                                <span class="recommendation-icon">${rec.icon}</span>
+                                <span class="recommendation-text">${rec.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('calculatorResult').innerHTML = resultHTML;
+            document.getElementById('calculatorResult').style.display = 'block';
+
+            // Scroll to result
+            document.getElementById('calculatorResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Achievements Functions
+        function unlockAchievement(achievementId) {
+            const achievement = state.achievements.find(a => a.id === achievementId);
+            if (achievement && !achievement.unlocked) {
+                achievement.unlocked = true;
+                
+                // Show notification
+                showNotification(`🎉 إنجاز جديد: ${achievement.name}`);
+                
+                // Update count
+                updateAchievementCount();
+                
+                // Save to localStorage
+                saveAchievements();
+                
+                // Re-render if on achievements page
+                if (state.currentSection === 'achievements') {
+                    renderAchievements();
+                }
+            }
+        }
+
+        function checkAchievements() {
+            // Check if all sections visited
+            if (state.visitedSections.size >= 5) {
+                unlockAchievement('complete_journey');
+            }
+            
+            // Check if viewed all energy types
+            if (state.visitedSections.has('energy')) {
+                unlockAchievement('energy_explorer');
+            }
+        }
+
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = state.achievements.map((achievement, index) => `
+                <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'} scroll-reveal" style="animation-delay: ${index * 0.1}s;">
+                    <span class="achievement-icon">${achievement.icon}</span>
+                    <h3 class="achievement-title">${achievement.name}</h3>
+                    <p class="achievement-desc">${achievement.desc}</p>
+                    ${achievement.unlocked ? '<span class="achievement-badge">مفتوح</span>' : '<span class="achievement-badge" style="background: var(--gray);">مقفل</span>'}
+                </div>
+            `).join('');
+
+            // Trigger reveal animation
+            setTimeout(() => {
+                revealElements();
+            }, 100);
+        }
+
+        function updateAchievementCount() {
+            const unlocked = state.achievements.filter(a => a.unlocked).length;
+            const total = state.achievements.length;
+            document.getElementById('achievementCount').textContent = `${unlocked}/${total}`;
+        }
+
+        function saveAchievements() {
+            localStorage.setItem('achievements', JSON.stringify(state.achievements));
+        }
+
+        function loadAchievements() {
+            const saved = localStorage.getItem('achievements');
+            if (saved) {
+                const savedAchievements = JSON.parse(saved);
+                savedAchievements.forEach(saved => {
+                    const achievement = state.achievements.find(a => a.id === saved.id);
+                    if (achievement) {
+                        achievement.unlocked = saved.unlocked;
+                    }
+                });
+            }
+            updateAchievementCount();
+        }
+
+        // Notification System
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: var(--white);
+                padding: 1.25rem 2.5rem;
+                border-radius: 1rem;
+                box-shadow: var(--shadow-xl);
+                z-index: 10000;
+                font-weight: 800;
+                font-size: 1.125rem;
+                animation: slideDown 0.5s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.5s ease';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(-20px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupCalculator();
+            loadAchievements();
+            
+            // Animate stats on home page
+            animateStats();
+
+            // Initial reveal
+            setTimeout(() => {
+                revealElements();
+            }, 300);
+        });
+
+        function animateStats() {
+            const animateValue = (id, start, end, duration) => {
+                const element = document.getElementById(id);
+                if (!element) return;
+                
+                const range = end - start;
+                const increment = range / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= end) {
+                        element.textContent = end.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 16);
+            };
+
+            animateValue('totalLearners', 0, 1234, 2000);
+            animateValue('quizzesTaken', 0, parseInt(localStorage.getItem('quizzesTaken') || '567'), 2000);
+        }
+    </script>
+</body>
+</html>
